@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: naas-backend
+    restart: unless-stopped
+    networks:
+      - naas-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/no"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: naas-frontend
+    restart: unless-stopped
+    volumes:
+      - frontend-dist:/app
+    networks:
+      - naas-network
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: naas-nginx
+    restart: unless-stopped
+    ports:
+      - "1010:1010"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - frontend-dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - naas-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:1010"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  naas-network:
+    driver: bridge
+
+volumes:
+  frontend-dist:
