@@ -1,5 +1,7 @@
 # How About No?
 
+![screenshot](screenshot.jpeg)
+
 A beautiful, modern web application that generates creative excuses for when you need to decline something. Built with React, TypeScript, and powered by the No-as-a-Service API.
 
 ## Features
