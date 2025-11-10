@@ -23,8 +23,8 @@ Make sure ports **1010** (frontend) and **3001** (backend) are available on your
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/lloyd094/How-About-No-.git
+cd How-About-No-
 ```
 
 ### Option 1: Docker Compose (Recommended)
